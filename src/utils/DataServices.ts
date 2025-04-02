@@ -1,4 +1,4 @@
-import { IUserData, IUserInfo } from "./Interfaces";
+import { IBlogItems, IUserData, IUserInfo } from "./Interfaces";
 
 const url =
   "https://robinsonblog-h6fyg9ghabbbf4a2.westus-01.azurewebsites.net/";
@@ -79,3 +79,108 @@ export const checkToken = () => {
   }
   return result;
 };
+
+// -----------BLOG ENDPOINTS-------------
+
+export const getAllBlogs = async (token:string) => {
+  const res = await fetch(`${url}Blog/GetAllBlogs`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization" : "Bearer " + token,
+     }
+  });
+  if(!res.ok){
+    const errorData = await res.json()
+    const message = errorData.message
+    console.log(message)
+    return []
+  }
+
+  const data = await res.json()
+  return data
+}
+
+export const getBlogItemsByUserId = async(userId:number,token:string) => {
+  const res = await fetch(`${url}Blog/GetBlogsByUserId/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization" : "Bearer " + token,
+     }
+  });
+  if(!res.ok){
+    const errorData = await res.json()
+    const message = errorData.message
+    console.log(message)
+    return []
+  }
+
+  const data = await res.json()
+  return data
+}
+
+export const addBlogItem = async(blog:IBlogItems, token:string) => {
+  const res = await fetch(`${url}Blog/AddBlog`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body:JSON.stringify(blog)
+  });
+  if(!res.ok){
+    const errorData = await res.json()
+    const message = errorData.message
+    console.log(message)
+    return false
+  }
+  const data = await res.json()
+  //returns true and successfully added blog to backend
+  return data.success
+}
+
+export const updateBlogItem = async (blog:IBlogItems, token:string) => {
+  const res = await fetch(`${url}Blog/EditBlog`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body:JSON.stringify(blog)
+  });
+  if(!res.ok){
+    const errorData = await res.json()
+    const message = errorData.message
+    console.log(message)
+    return false
+  }
+  const data = await res.json()
+  //returns true and successfully added blog to backend
+  return data.success
+}
+
+
+export const deleteBlogItem = async (blog:IBlogItems, token:string) => {
+  const res = await fetch(`${url}Blog/DeleteBlog`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body:JSON.stringify(blog)
+  });
+  if(!res.ok){
+    const errorData = await res.json()
+    const message = errorData.message
+    console.log(message)
+    return false
+  }
+  const data = await res.json()
+  //returns true and successfully added blog to backend
+  return data.success
+}
+
+const getToken = () => {
+  return localStorage.getItem("Token") ?? ""
+}
