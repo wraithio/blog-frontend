@@ -180,7 +180,3 @@ export const deleteBlogItem = async (blog:IBlogItems, token:string) => {
   //returns true and successfully added blog to backend
   return data.success
 }
-
-const getToken = () => {
-  return localStorage.getItem("Token") ?? ""
-}
